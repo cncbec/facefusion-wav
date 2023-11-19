@@ -224,3 +224,6 @@ def process_image(source_path : str, target_path : str, output_path : str) -> No
 
 def process_video(source_path : str, temp_frame_paths : List[str]) -> None:
 	facefusion.processors.frame.core.multi_process_frames(None, temp_frame_paths, process_frames)
+
+def process_video_wav2lip(temp_frame_paths : List[str]) -> None:
+	facefusion.processors.frame.core.multi_process_frames_wav2lip(temp_frame_paths, process_frames_wav2lip)
