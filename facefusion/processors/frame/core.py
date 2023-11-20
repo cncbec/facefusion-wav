@@ -5,7 +5,7 @@ import psutil
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from queue import Queue
 from types import ModuleType
-from typing import Any, List
+from typing import Union, Any, List, Tuple
 from tqdm import tqdm
 
 import facefusion.globals
