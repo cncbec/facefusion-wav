@@ -215,6 +215,12 @@ def process_frames(source_path : str, temp_frame_paths : List[str], update_progr
 		write_image(temp_frame_path, result_frame)
 		update_progress()
 
+def process_frames_wav2lip(temp_frame_paths : List[Tuple[int, str]], update_progress : Update_Process) -> None:
+	for index, temp_frame in temp_frame_paths:
+		result_frame = process_frame(None, None, temp_frame)
+		write_image('temp/{}.jpg'.format(index), result_frame)
+		update_progress()
+
 
 def process_image(source_path : str, target_path : str, output_path : str) -> None:
 	target_frame = read_static_image(target_path)
