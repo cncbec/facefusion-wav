@@ -11,6 +11,7 @@ from tqdm import tqdm
 import facefusion.globals
 from facefusion import wording
 from facefusion.typing import Process_Frames
+from facefusion.typing import Process_Frames_Wav2lip
 
 FRAME_PROCESSORS_MODULES : List[ModuleType] = []
 FRAME_PROCESSORS_METHODS =\
