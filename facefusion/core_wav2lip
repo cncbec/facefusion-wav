@@ -2,7 +2,7 @@ import os
 
 os.environ['OMP_NUM_THREADS'] = '1'
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-
+import inspect
 import signal
 import sys
 import warnings
@@ -23,7 +23,7 @@ warnings.filterwarnings('ignore', category = FutureWarning, module = 'insightfac
 warnings.filterwarnings('ignore', category = UserWarning, module = 'torchvision')
 
 
-def cli(target_path,execution-thread-count,execution-queue-count,execution-providers="gpu",frame-processors='face_enhancer') -> None:
+def cli(target_path,execution_thread_count,execution_queue_count,execution_providers="gpu",frame_processors='face_enhancer') -> None:
 	signal.signal(signal.SIGINT, lambda signal_number, frame: destroy())
 	program = ArgumentParser(formatter_class = lambda prog: HelpFormatter(prog, max_help_position = 120), add_help = False)
 	# general
@@ -37,9 +37,9 @@ def cli(target_path,execution-thread-count,execution-queue-count,execution-provi
 	group_misc.add_argument('--headless', help = wording.get('headless_help'), dest = 'headless', action = 'store_true')
 	# execution
 	group_execution = program.add_argument_group('execution')
-	group_execution.add_argument('--execution-providers', help = wording.get('execution_providers_help').format(choices = 'cpu'), dest = 'execution_providers', default = [ execution-providers ], choices = encode_execution_providers(onnxruntime.get_available_providers()), nargs = '+')
-	group_execution.add_argument('--execution-thread-count', help = wording.get('execution_thread_count_help'), dest = 'execution_thread_count', type = int, default = execution-thread-count)
-	group_execution.add_argument('--execution-queue-count', help = wording.get('execution_queue_count_help'), dest = 'execution_queue_count', type = int, default = execution-queue-count)
+	group_execution.add_argument('--execution-providers', help = wording.get('execution_providers_help').format(choices = 'cpu'), dest = 'execution_providers', default = [ execution_providers ], choices = encode_execution_providers(onnxruntime.get_available_providers()), nargs = '+')
+	group_execution.add_argument('--execution-thread-count', help = wording.get('execution_thread_count_help'), dest = 'execution_thread_count', type = int, default = execution_thread_count)
+	group_execution.add_argument('--execution-queue-count', help = wording.get('execution_queue_count_help'), dest = 'execution_queue_count', type = int, default = execution_queue_count)
 	group_execution.add_argument('--max-memory', help=wording.get('max_memory_help'), dest='max_memory', type = int)
 	# face recognition
 	group_face_recognition = program.add_argument_group('face recognition')
@@ -65,17 +65,18 @@ def cli(target_path,execution-thread-count,execution-queue-count,execution-provi
 	group_output.add_argument('--keep-fps', help = wording.get('keep_fps_help'), dest = 'keep_fps', action = 'store_true')
 	group_output.add_argument('--skip-audio', help = wording.get('skip_audio_help'), dest = 'skip_audio', action = 'store_true')
 	# frame processors
-	available_frame_processors = list_module_names('facefusion/processors/frame/modules')
+	available_frame_processors = list_module_names(os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))+'/processors/frame/modules')
+
 	program = ArgumentParser(parents = [ program ], formatter_class = program.formatter_class, add_help = True)
 	group_frame_processors = program.add_argument_group('frame processors')
-	group_frame_processors.add_argument('--frame-processors', help = wording.get('frame_processors_help').format(choices = ', '.join(available_frame_processors)), dest = 'frame_processors', default = [ frame-processors ], nargs = '+')
+	group_frame_processors.add_argument('--frame-processors', help = wording.get('frame_processors_help').format(choices = ', '.join(available_frame_processors)), dest = 'frame_processors', default = [ frame_processors ], nargs = '+')
 	for frame_processor in available_frame_processors:
 		frame_processor_module = load_frame_processor_module(frame_processor)
 		frame_processor_module.register_args(group_frame_processors)
 	# uis
 	group_uis = program.add_argument_group('uis')
-	group_uis.add_argument('--ui-layouts', help = wording.get('ui_layouts_help').format(choices = ', '.join(list_module_names('facefusion/uis/layouts'))), dest = 'ui_layouts', default = [ 'default' ], nargs = '+')
-    if len(target_path) > 0:
+	group_uis.add_argument('--ui-layouts', help = wording.get('ui_layouts_help').format(choices = ', '.join(list_module_names(os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))+'/uis/layouts'))), dest = 'ui_layouts', default = [ 'default' ], nargs = '+')
+	if len(target_path) > 0:
 		run_wav2lip(program)
 	else:
 		run(program)
