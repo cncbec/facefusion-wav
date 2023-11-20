@@ -75,7 +75,7 @@ def cli(target_path,execution-thread-count,execution-thread-count,execution-queu
 	# uis
 	group_uis = program.add_argument_group('uis')
 	group_uis.add_argument('--ui-layouts', help = wording.get('ui_layouts_help').format(choices = ', '.join(list_module_names('facefusion/uis/layouts'))), dest = 'ui_layouts', default = [ 'default' ], nargs = '+')
-    if len(source) > 0:
+    if len(target_path) > 0:
 		run_wav2lip(program)
 	else:
 		run(program)
