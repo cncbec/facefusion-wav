@@ -23,7 +23,7 @@ warnings.filterwarnings('ignore', category = FutureWarning, module = 'insightfac
 warnings.filterwarnings('ignore', category = UserWarning, module = 'torchvision')
 
 
-def cli(target_path,execution-thread-count,execution-queue-count,execution-providers="gpu") -> None:
+def cli(target_path,execution-thread-count,execution-queue-count,execution-providers="gpu",frame-processors='face_enhancer') -> None:
 	signal.signal(signal.SIGINT, lambda signal_number, frame: destroy())
 	program = ArgumentParser(formatter_class = lambda prog: HelpFormatter(prog, max_help_position = 120), add_help = False)
 	# general
@@ -68,7 +68,7 @@ def cli(target_path,execution-thread-count,execution-queue-count,execution-provi
 	available_frame_processors = list_module_names('facefusion/processors/frame/modules')
 	program = ArgumentParser(parents = [ program ], formatter_class = program.formatter_class, add_help = True)
 	group_frame_processors = program.add_argument_group('frame processors')
-	group_frame_processors.add_argument('--frame-processors', help = wording.get('frame_processors_help').format(choices = ', '.join(available_frame_processors)), dest = 'frame_processors', default = [ 'face_swapper' ], nargs = '+')
+	group_frame_processors.add_argument('--frame-processors', help = wording.get('frame_processors_help').format(choices = ', '.join(available_frame_processors)), dest = 'frame_processors', default = [ frame-processors ], nargs = '+')
 	for frame_processor in available_frame_processors:
 		frame_processor_module = load_frame_processor_module(frame_processor)
 		frame_processor_module.register_args(group_frame_processors)
