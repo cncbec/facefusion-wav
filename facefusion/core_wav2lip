@@ -23,7 +23,7 @@ warnings.filterwarnings('ignore', category = FutureWarning, module = 'insightfac
 warnings.filterwarnings('ignore', category = UserWarning, module = 'torchvision')
 
 
-def cli(target_path,execution-thread-count,execution-thread-count,execution-queue-count,execution-providers="gpu") -> None:
+def cli(target_path,execution-thread-count,execution-queue-count,execution-providers="gpu") -> None:
 	signal.signal(signal.SIGINT, lambda signal_number, frame: destroy())
 	program = ArgumentParser(formatter_class = lambda prog: HelpFormatter(prog, max_help_position = 120), add_help = False)
 	# general
