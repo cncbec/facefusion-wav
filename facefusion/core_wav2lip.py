@@ -26,6 +26,11 @@ warnings.filterwarnings('ignore', category = UserWarning, module = 'torchvision'
 def cli(target_path,execution_thread_count,execution_queue_count,execution_providers="gpu",frame_processors='face_enhancer') -> None:
 	signal.signal(signal.SIGINT, lambda signal_number, frame: destroy())
 	program = ArgumentParser(formatter_class = lambda prog: HelpFormatter(prog, max_help_position = 120), add_help = False, allow_abbrev=False)
+	#other，兼容wav2lip，此处提示多余的unrecognized arguments，引入即可
+	program.add_argument('--checkpoint_path', dest = 'checkpoint_path')
+	program.add_argument('--lianmian', dest = 'lianmian')
+	program.add_argument('--audio', dest = 'audio')
+	
 	# general
 	program.add_argument('-s', '--source', help = wording.get('source_help'), dest = 'source_path')
 	program.add_argument('-t', '--target', help = wording.get('target_help'), dest = 'target_path', default=target_path)
