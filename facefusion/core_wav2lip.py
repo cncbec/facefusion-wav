@@ -92,7 +92,10 @@ def apply_args(program : ArgumentParser) -> None:
 	# general
 	facefusion.globals.source_path = args.source_path
 	facefusion.globals.target_path = args.target_path
-	facefusion.globals.output_path = normalize_output_path(facefusion.globals.source_path, facefusion.globals.target_path, args.output_path)
+	if isinstance(facefusion.globals.target_path, list):
+		facefusion.globals.output_path = ''
+	else:
+		facefusion.globals.output_path = normalize_output_path(facefusion.globals.source_path, facefusion.globals.target_path, args.output_path)
 	# misc
 	facefusion.globals.skip_download = args.skip_download
 	facefusion.globals.headless = args.headless
