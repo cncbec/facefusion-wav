@@ -125,7 +125,7 @@ def apply_args(program : ArgumentParser) -> None:
 	facefusion.globals.keep_fps = args.keep_fps
 	facefusion.globals.skip_audio = args.skip_audio
 	# frame processors
-	available_frame_processors = list_module_names('facefusion/processors/frame/modules')
+	available_frame_processors = list_module_names(os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))+'/processors/frame/modules')
 	facefusion.globals.frame_processors = args.frame_processors
 	for frame_processor in available_frame_processors:
 		frame_processor_module = load_frame_processor_module(frame_processor)
