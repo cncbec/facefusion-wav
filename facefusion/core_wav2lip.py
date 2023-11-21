@@ -30,6 +30,7 @@ def cli(target_path,execution_thread_count,execution_queue_count,execution_provi
 	program.add_argument('--checkpoint_path', dest = 'checkpoint_path')
 	program.add_argument('--lianmian', dest = 'lianmian')
 	program.add_argument('--audio', dest = 'audio')
+	program.add_argument('--quality', dest = 'quality')
 	
 	# general
 	program.add_argument('-s', '--source', help = wording.get('source_help'), dest = 'source_path')
