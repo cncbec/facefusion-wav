@@ -10,7 +10,7 @@ import platform
 import shutil
 import onnxruntime
 import tensorflow
-from argparse import ArgumentParser, HelpFormatter
+from argparse import ArgumentParser, HelpFormatter, ArgumentError
 
 import facefusion.choices
 import facefusion.globals
@@ -26,12 +26,17 @@ warnings.filterwarnings('ignore', category = UserWarning, module = 'torchvision'
 def cli(target_path,execution_thread_count,execution_queue_count,execution_providers="gpu",frame_processors='face_enhancer') -> None:
 	signal.signal(signal.SIGINT, lambda signal_number, frame: destroy())
 	program = ArgumentParser(formatter_class = lambda prog: HelpFormatter(prog, max_help_position = 120), add_help = False, allow_abbrev=False)
-	#other，兼容wav2lip，此处提示多余的unrecognized arguments，引入即可
+  #other，兼容wav2lip，此处提示多余的unrecognized arguments，引入即可
 	program.add_argument('--checkpoint_path', dest = 'checkpoint_path')
 	program.add_argument('--lianmian', dest = 'lianmian')
 	program.add_argument('--audio', dest = 'audio')
 	program.add_argument('--quality', dest = 'quality')
-	
+	program.add_argument('--mask_dilation', dest = 'mask_dilation')
+	program.add_argument('--mouth_tracking', dest = 'mouth_tracking')
+	program.add_argument('--mask_feathering', dest = 'mask_feathering')
+	program.add_argument('--nosmooth', dest = 'nosmooth')
+	program.add_argument('--pads', dest = 'pads')
+  
 	# general
 	program.add_argument('-s', '--source', help = wording.get('source_help'), dest = 'source_path')
 	program.add_argument('-t', '--target', help = wording.get('target_help'), dest = 'target_path', default=target_path)
@@ -70,6 +75,8 @@ def cli(target_path,execution_thread_count,execution_queue_count,execution_provi
 	group_output.add_argument('--output-video-quality', help = wording.get('output_video_quality_help'), dest = 'output_video_quality', type = int, default = 80, choices = range(101), metavar = '[0-100]')
 	group_output.add_argument('--keep-fps', help = wording.get('keep_fps_help'), dest = 'keep_fps', action = 'store_true')
 	group_output.add_argument('--skip-audio', help = wording.get('skip_audio_help'), dest = 'skip_audio', action = 'store_true')
+	args, unknown_args = program.parse_known_args()
+	print('未知参数有{}'.format(unknown_args))
 	# frame processors
 	available_frame_processors = list_module_names(os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))+'/processors/frame/modules')
 
@@ -82,14 +89,21 @@ def cli(target_path,execution_thread_count,execution_queue_count,execution_provi
 	# uis
 	group_uis = program.add_argument_group('uis')
 	group_uis.add_argument('--ui-layouts', help = wording.get('ui_layouts_help').format(choices = ', '.join(list_module_names(os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))+'/uis/layouts'))), dest = 'ui_layouts', default = [ 'default' ], nargs = '+')
+	args, unknown_args = program.parse_known_args()
+	print('未知参数有{}'.format(unknown_args))
 	if len(target_path) > 0:
-		run_wav2lip(program)
+		return run_wav2lip(program)
 	else:
 		run(program)
 
 
 def apply_args(program : ArgumentParser) -> None:
 	args = program.parse_args()
+	try:
+		args = program.parse_args()
+	except ArgumentError:
+    # 捕获 ArgumentParser 错误，表明存在未知参数
+		pass
 	# general
 	facefusion.globals.source_path = args.source_path
 	facefusion.globals.target_path = args.target_path
@@ -162,7 +176,7 @@ def run_wav2lip(program : ArgumentParser) -> None:
 	for frame_processor_module in get_frame_processors_modules(facefusion.globals.frame_processors):
 		if not frame_processor_module.pre_check():
 			return
-	process_video_wav2lip()
+	return process_video_wav2lip()
 
 
 def destroy() -> None:
@@ -238,7 +252,7 @@ def process_video_wav2lip() -> None:
 	if len(facefusion.globals.target_path) > 0:
 		for frame_processor_module in get_frame_processors_modules(facefusion.globals.frame_processors):
 			update_status(wording.get('processing'), frame_processor_module.NAME)
-			frame_processor_module.process_video_wav2lip(facefusion.globals.target_path)
+			return frame_processor_module.process_video_wav2lip(facefusion.globals.target_path)
 	else:
 		update_status(wording.get('temp_frames_not_found'))
 		return
