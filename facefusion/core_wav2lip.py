@@ -30,6 +30,7 @@ def cli(target_path,execution_thread_count,execution_queue_count,execution_provi
 	program.add_argument('--checkpoint_path', dest = 'checkpoint_path')
 	program.add_argument('--lianmian', dest = 'lianmian')
 	program.add_argument('--audio', dest = 'audio')
+	program.add_argument('--out_file', dest = 'out_file')
 	program.add_argument('--quality', dest = 'quality')
 	program.add_argument('--mask_dilation', dest = 'mask_dilation')
 	program.add_argument('--mouth_tracking', dest = 'mouth_tracking')
