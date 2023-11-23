@@ -11,6 +11,7 @@ import shutil
 import onnxruntime
 import tensorflow
 from argparse import ArgumentParser, HelpFormatter, ArgumentError
+import glob
 
 import facefusion.choices
 import facefusion.globals
@@ -262,6 +263,19 @@ def process_image() -> None:
 		update_status(wording.get('processing_image_failed'))
 
 def process_video_wav2lip() -> None:
+	# process frame
+
+	if os.path.exists(facefusion.globals.target_path):
+		# 使用glob匹配所有图片文件
+		image_paths = sorted(glob.glob(os.path.join(facefusion.globals.target_path, '*.jpg')) + glob.glob(os.path.join(facefusion.globals.target_path, '*.jpeg')))
+
+		for frame_processor_module in get_frame_processors_modules(facefusion.globals.frame_processors):
+			update_status(wording.get('processing'), frame_processor_module.NAME)
+			return frame_processor_module.process_video_wav2lip(image_paths)
+	else:
+		update_status(wording.get('temp_frames_not_found'))
+		return
+def process_video_wav2lip_beifen() -> None:#从内存调取，改为从路径读取图片之前，备份
 	# process frame
 	if len(facefusion.globals.target_path) > 0:
 		for frame_processor_module in get_frame_processors_modules(facefusion.globals.frame_processors):
