@@ -31,7 +31,7 @@ def cli(target_path,execution_thread_count,execution_queue_count,execution_provi
 	program.add_argument('--lianmian', dest = 'lianmian')
 	program.add_argument('--audio', dest = 'audio')
 	program.add_argument('--out_file', dest = 'out_file')
-	program.add_argument('--pads', dest = 'pads')
+	program.add_argument('--pads', nargs='+', type=int, default=[0, 10, 0, 0], dest = 'pads')
 	program.add_argument('--segmentation_path', dest = 'segmentation_path')
 	program.add_argument('--outfile', dest = 'outfile')
 	program.add_argument('--static', dest = 'static')
