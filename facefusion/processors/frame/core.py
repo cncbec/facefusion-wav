@@ -85,11 +85,13 @@ def multi_process_frames_wav2lip(temp_frame_paths: List[str], process_frames_wav
     with tqdm(total=len(temp_frame_paths), desc=wording.get('processing'), unit='frame', dynamic_ncols=True, bar_format=progress_bar_format) as progress:
         with ThreadPoolExecutor(max_workers=facefusion.globals.execution_thread_count) as executor:
             futures = []
-            queue_temp_frame_paths: Queue[str] = create_queue_wav2lip(temp_frame_paths)
+            #queue_temp_frame_paths: Queue[str] = create_queue_wav2lip(temp_frame_paths)
+			queue_temp_frame_paths: Queue[str] = create_queue(temp_frame_paths)
             queue_per_future = max(len(temp_frame_paths) // facefusion.globals.execution_thread_count * facefusion.globals.execution_queue_count, 1)
             
             while not queue_temp_frame_paths.empty():
-                payload_temp_frame_paths = pick_queue_wav2lip(queue_temp_frame_paths, queue_per_future)
+                #payload_temp_frame_paths = pick_queue_wav2lip(queue_temp_frame_paths, queue_per_future)
+				payload_temp_frame_paths = pick_queue(queue_temp_frame_paths, queue_per_future)
                 future = executor.submit(process_frames_wav2lip, payload_temp_frame_paths, lambda: update_progress(progress))
                 futures.append(future)
                 
