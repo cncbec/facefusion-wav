@@ -220,11 +220,11 @@ def process_frames_wav2lip(temp_frame_paths : List[Tuple[int, str]], update_prog
   print('一次执行')
   for index, temp_frame in temp_frame_paths:
     result_frame = process_frame(None, None, temp_frame)
-    result_all_frames.append((index,result_frame))
-    # write_image('temp/{}.jpg'.format(index), result_frame)
+    #result_all_frames.append((index,result_frame))
+    write_image(temp_frame, result_frame)#return result_all_frames改为直接写入图片
     # print('执行到此{}'.format(index))
     update_progress()
-  return result_all_frames
+  # return result_all_frames
 
 
 def process_image(source_path : str, target_path : str, output_path : str) -> None:
