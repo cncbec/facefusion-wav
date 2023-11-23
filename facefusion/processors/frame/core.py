@@ -99,7 +99,7 @@ def multi_process_frames_wav2lip(temp_frame_paths: List[str], process_frames_wav
                 result = future.result()
                 results.extend(result)
                 update_progress(progress)
-                print("Number of tasks completed:", len(results))
+                # print("Number of tasks completed:", len(results))
     return results
 
 
