@@ -263,9 +263,10 @@ def process_image() -> None:
 	else:
 		update_status(wording.get('processing_image_failed'))
 
+#获取目录内的图片并按照从小到大排序生成列表
 def from_file_get_images(path) -> List[Any]:
 	# Get a list of image files in the folder
-	image_files = [f for f in os.listdir(facefusion.globals.target_path) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.gif'))]
+	image_files = [f for f in os.listdir(path) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.gif'))]
 
 	# Sort the image files based on their numeric part in the filename
 	image_paths = sorted(
@@ -274,8 +275,9 @@ def from_file_get_images(path) -> List[Any]:
 	)
 
 	# Create a list of full image paths
-	image_paths = [os.path.join(facefusion.globals.target_path, file) for file in image_paths]
+	image_paths = [os.path.join(path, file) for file in image_paths]
 	return image_paths
+
 def process_video_wav2lip() -> None:
 	# process frame
 
