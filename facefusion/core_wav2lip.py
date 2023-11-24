@@ -1,5 +1,5 @@
 import os
-
+import re
 os.environ['OMP_NUM_THREADS'] = '1'
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 import inspect
@@ -12,7 +12,7 @@ import onnxruntime
 import tensorflow
 from argparse import ArgumentParser, HelpFormatter, ArgumentError
 import glob
-
+from typing import Union, Any, List, Tuple
 import facefusion.choices
 import facefusion.globals
 from facefusion import metadata, wording
@@ -263,13 +263,25 @@ def process_image() -> None:
 	else:
 		update_status(wording.get('processing_image_failed'))
 
+def from_file_get_images(path) -> List[Any]:
+	# Get a list of image files in the folder
+	image_files = [f for f in os.listdir(facefusion.globals.target_path) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.gif'))]
+
+	# Sort the image files based on their numeric part in the filename
+	image_paths = sorted(
+		image_files,
+		key=lambda s: [int(text) if text.isdigit() else text.lower() for text in re.split('([0-9]+)', s)]
+	)
+
+	# Create a list of full image paths
+	image_paths = [os.path.join(facefusion.globals.target_path, file) for file in image_paths]
+	return image_paths
 def process_video_wav2lip() -> None:
 	# process frame
 
 	if os.path.exists(facefusion.globals.target_path):
 		# 使用glob匹配所有图片文件
-		image_paths = sorted(glob.glob(os.path.join(facefusion.globals.target_path, '*.jpg')) + glob.glob(os.path.join(facefusion.globals.target_path, '*.jpeg')))
-
+		image_paths = from_file_get_images(facefusion.globals.target_path)
 		for frame_processor_module in get_frame_processors_modules(facefusion.globals.frame_processors):
 			update_status(wording.get('processing'), frame_processor_module.NAME)
 			return frame_processor_module.process_video_wav2lip(image_paths)
