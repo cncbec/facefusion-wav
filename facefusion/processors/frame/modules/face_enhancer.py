@@ -218,8 +218,8 @@ def process_frames(source_path : str, temp_frame_paths : List[str], update_progr
 def process_frames_wav2lip(temp_frame_paths : List[Tuple[int, str]], update_progress : Update_Process) -> List[Tuple[int, Any]]:
   result_all_frames = []
   print('一次执行')
-  for index, temp_frame in temp_frame_paths:
-    temp_frame_cv2 = read_image(temp_frame_path)
+  for temp_frame in temp_frame_paths:
+    temp_frame_cv2 = read_image(temp_frame)
     result_frame = process_frame(None, None, temp_frame_cv2)
     #result_frame = process_frame(None, None, temp_frame)
     #result_all_frames.append((index,result_frame))
@@ -227,6 +227,19 @@ def process_frames_wav2lip(temp_frame_paths : List[Tuple[int, str]], update_prog
     # print('执行到此{}'.format(index))
     update_progress()
   # return result_all_frames
+
+# 调取列表，改为读取图片之前备份
+# def process_frames_wav2lip(temp_frame_paths : List[Tuple[int, str]], update_progress : Update_Process) -> List[Tuple[int, Any]]:
+#   result_all_frames = []
+#   print('一次执行')
+#   for index, temp_frame in temp_frame_paths:
+#     temp_frame_cv2 = read_image(temp_frame_path)
+#     result_frame = process_frame(None, None, temp_frame_cv2)
+#     result_frame = process_frame(None, None, temp_frame)
+#     result_all_frames.append((index,result_frame))
+#     # print('执行到此{}'.format(index))
+#     update_progress()
+#   return result_all_frames
 
 
 def process_image(source_path : str, target_path : str, output_path : str) -> None:
