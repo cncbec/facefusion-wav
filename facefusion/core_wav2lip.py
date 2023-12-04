@@ -31,6 +31,7 @@ def cli(target_path,execution_thread_count,execution_queue_count,execution_provi
 	program.add_argument('--checkpoint_path', dest = 'checkpoint_path')
 	program.add_argument('--lianmian', dest = 'lianmian')
 	program.add_argument('--audio', dest = 'audio')
+	program.add_argument('--srt', dest = 'srt')
 	program.add_argument('--out_height', dest = 'out_height')
 	program.add_argument('--out_file', dest = 'out_file')
 	program.add_argument('--pads', nargs='+', type=int, default=[0, 10, 0, 0], dest = 'pads')
